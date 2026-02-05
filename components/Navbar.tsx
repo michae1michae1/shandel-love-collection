@@ -31,7 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({ scrolled, siteSettings, loading 
       </div>
 
       <div data-section="brand" className="navbar__brand absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
-        <span className="navbar__brand-name font-serif text-2xl md:text-3xl tracking-[0.1em] font-medium text-white uppercase">
+        <span className="navbar__brand-name font-serif text-xl md:text-3xl tracking-[0.1em] font-medium text-white uppercase whitespace-nowrap">
           {siteSettings.brandName}
         </span>
         <span className="navbar__brand-tagline text-[10px] tracking-[0.4em] text-rose-200/80 uppercase -mt-0 font-light">

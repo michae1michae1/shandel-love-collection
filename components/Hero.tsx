@@ -70,7 +70,7 @@ export const Hero: React.FC<HeroProps> = ({ content, loading = false }) => {
         </div>
       </div>
 
-      <div data-section="scroll-indicator" className="hero__scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+      <div data-section="scroll-indicator" className="hero__scroll-indicator absolute bottom-10 inset-x-0 z-20 flex justify-center animate-bounce">
         <ChevronDown className="text-white/40" size={32} strokeWidth={1} />
       </div>
     </section>
