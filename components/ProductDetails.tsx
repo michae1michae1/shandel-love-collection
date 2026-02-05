@@ -14,6 +14,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product, scentNo
 
   return (
     <section 
+      id="experience"
       data-component="ProductDetails"
       data-loading={loading || undefined}
       className="product-details py-24 bg-white text-black"

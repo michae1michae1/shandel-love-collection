@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Hero, PreOrderSection, ProductDetails, Footer } from './components';
+import { Navbar, Hero, PreOrderSection, ProductDetails, Footer, ComingSoon } from './components';
 import { HeroSkeleton, PreOrderSkeleton, ProductDetailsSkeleton } from './components/ui';
 import { useHeroContent, useSiteSettings, useShopifyProduct, useProductFeatures, useScentNotes } from './hooks';
 import { DEFAULT_SITE_SETTINGS } from './types/content';
@@ -9,6 +9,7 @@ const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN || '';
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   // Fetch CMS content from Shopify
   const { heroContent, loading: heroLoading } = useHeroContent();
@@ -35,6 +36,16 @@ const App: React.FC = () => {
         scrolled={scrolled} 
         siteSettings={siteLoading ? DEFAULT_SITE_SETTINGS : siteSettings}
         loading={siteLoading}
+        onCollectionClick={() => setShowComingSoon(true)}
+        onExperienceClick={() => {
+          document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+      />
+
+      {/* Coming Soon Modal */}
+      <ComingSoon 
+        isOpen={showComingSoon} 
+        onClose={() => setShowComingSoon(false)} 
       />
       
       <main data-section="main-content" className="home-page__main">
