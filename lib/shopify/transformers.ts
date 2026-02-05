@@ -53,17 +53,22 @@ function getMetafieldImage(metafields: (ShopifyMetafield | null)[], key: string)
   return null;
 }
 
+// Default poster image fallback
+const DEFAULT_POSTER_URL = 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=1920';
+
 // Transform hero section metaobject
 export function transformHeroContent(metaobject: ShopifyMetaobject): HeroContent {
   const fields = metaobject.fields;
   const posterImage = getFieldImage(fields, 'background_poster');
+  // Also check for URL-based poster field (simpler setup without file upload)
+  const posterUrl = getFieldValue(fields, 'background_poster_url');
 
   return {
     badgeText: getFieldValue(fields, 'badge_text') || 'Coming Soon',
     titleLine1: getFieldValue(fields, 'title_line_1') || 'Love Transforms',
     titleLine2: getFieldValue(fields, 'title_line_2') || 'Everything.',
     backgroundVideoUrl: getFieldValue(fields, 'background_video_url'),
-    backgroundPosterUrl: posterImage?.url || '',
+    backgroundPosterUrl: posterImage?.url || posterUrl || DEFAULT_POSTER_URL,
     primaryCtaText: getFieldValue(fields, 'primary_cta_text') || 'Shop Now',
     primaryCtaLink: getFieldValue(fields, 'primary_cta_link') || '#pre-order',
     secondaryCtaText: getFieldValue(fields, 'secondary_cta_text'),

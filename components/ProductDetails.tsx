@@ -4,11 +4,13 @@ import type { ProductData, ScentNote } from '../types/content';
 
 interface ProductDetailsProps {
   product: ProductData;
+  scentNotes?: ScentNote[];
   loading?: boolean;
 }
 
-export const ProductDetails: React.FC<ProductDetailsProps> = ({ product, loading = false }) => {
-  const notes = product.scentNotes.length > 0 ? product.scentNotes : [];
+export const ProductDetails: React.FC<ProductDetailsProps> = ({ product, scentNotes, loading = false }) => {
+  // Use scentNotes prop if provided and has entries, otherwise fall back to product.scentNotes
+  const notes = scentNotes && scentNotes.length > 0 ? scentNotes : product.scentNotes;
 
   return (
     <section 

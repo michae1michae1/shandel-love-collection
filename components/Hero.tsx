@@ -14,21 +14,27 @@ export const Hero: React.FC<HeroProps> = ({ content, loading = false }) => {
       data-loading={loading || undefined}
       className="hero relative h-screen w-full flex items-center justify-center overflow-hidden"
     >
-      {/* Background Video */}
+      {/* Background Video or Image */}
       <div data-section="background" className="hero__background absolute inset-0 z-0">
         <div className="hero__overlay absolute inset-0 bg-black/40 z-10" />
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline 
-          className="hero__video w-full h-full object-cover scale-110"
-          poster={content.backgroundPosterUrl}
-        >
-          {content.backgroundVideoUrl && (
+        {content.backgroundVideoUrl ? (
+          <video 
+            autoPlay 
+            muted 
+            loop 
+            playsInline 
+            className="hero__video w-full h-full object-cover scale-110"
+            poster={content.backgroundPosterUrl}
+          >
             <source src={content.backgroundVideoUrl} type="video/mp4" />
-          )}
-        </video>
+          </video>
+        ) : (
+          <img
+            src={content.backgroundPosterUrl}
+            alt="Hero background"
+            className="hero__poster w-full h-full object-cover scale-110"
+          />
+        )}
       </div>
 
       <div data-section="content" className="hero__content relative z-20 text-center px-4 max-w-4xl mx-auto">

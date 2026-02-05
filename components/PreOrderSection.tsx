@@ -8,10 +8,11 @@ import type { ProductData, ProductFeature } from '../types/content';
 
 interface PreOrderSectionProps {
   product: ProductData;
+  features?: ProductFeature[];
   loading?: boolean;
 }
 
-export const PreOrderSection: React.FC<PreOrderSectionProps> = ({ product, loading = false }) => {
+export const PreOrderSection: React.FC<PreOrderSectionProps> = ({ product, features, loading = false }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -57,7 +58,7 @@ export const PreOrderSection: React.FC<PreOrderSectionProps> = ({ product, loadi
       <div data-section="product-info" className="pre-order-section__info w-full lg:w-1/2 order-2 lg:order-2 space-y-6 lg:space-y-8">
         <PreOrderHeader product={product} />
         <PreOrderDescription product={product} />
-        <PreOrderFeatures features={product.features} />
+        <PreOrderFeatures features={features && features.length > 0 ? features : product.features} />
         <PreOrderActions product={product} />
       </div>
     </div>

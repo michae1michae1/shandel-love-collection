@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Hero, PreOrderSection, ProductDetails, Footer } from './components';
 import { HeroSkeleton, PreOrderSkeleton, ProductDetailsSkeleton } from './components/ui';
-import { useHeroContent, useSiteSettings, useShopifyProduct } from './hooks';
+import { useHeroContent, useSiteSettings, useShopifyProduct, useProductFeatures, useScentNotes } from './hooks';
 import { DEFAULT_SITE_SETTINGS } from './types/content';
 
 const FEATURED_PRODUCT_HANDLE = import.meta.env.VITE_FEATURED_PRODUCT_HANDLE || 'love-le-nouveau';
@@ -14,6 +14,8 @@ const App: React.FC = () => {
   const { heroContent, loading: heroLoading } = useHeroContent();
   const { siteSettings, loading: siteLoading } = useSiteSettings();
   const { product, loading: productLoading } = useShopifyProduct(FEATURED_PRODUCT_HANDLE);
+  const { features, loading: featuresLoading } = useProductFeatures();
+  const { scentNotes, loading: scentNotesLoading } = useScentNotes();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,22 +54,24 @@ const App: React.FC = () => {
           data-section="pre-order"
           className="home-page__pre-order-section relative z-10 bg-[#0c0c0c]"
         >
-          {productLoading ? (
+          {productLoading || featuresLoading ? (
             <PreOrderSkeleton />
           ) : (
             <PreOrderSection 
               product={product}
+              features={features}
               loading={productLoading}
             />
           )}
         </section>
 
         {/* Detailed Scent Narrative */}
-        {productLoading ? (
+        {productLoading || scentNotesLoading ? (
           <ProductDetailsSkeleton />
         ) : (
           <ProductDetails 
             product={product}
+            scentNotes={scentNotes}
             loading={productLoading}
           />
         )}
