@@ -1,10 +1,19 @@
-
 import React, { useState, useEffect } from 'react';
 import { Navbar, Hero, PreOrderSection, ProductDetails, Footer } from './components';
-import { cn } from './lib/cn';
+import { HeroSkeleton, PreOrderSkeleton, ProductDetailsSkeleton } from './components/ui';
+import { useHeroContent, useSiteSettings, useShopifyProduct } from './hooks';
+import { DEFAULT_SITE_SETTINGS } from './types/content';
+
+const FEATURED_PRODUCT_HANDLE = import.meta.env.VITE_FEATURED_PRODUCT_HANDLE || 'love-le-nouveau';
+const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN || '';
 
 const App: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
+
+  // Fetch CMS content from Shopify
+  const { heroContent, loading: heroLoading } = useHeroContent();
+  const { siteSettings, loading: siteLoading } = useSiteSettings();
+  const { product, loading: productLoading } = useShopifyProduct(FEATURED_PRODUCT_HANDLE);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,14 +26,25 @@ const App: React.FC = () => {
   return (
     <div 
       data-page="HomePage"
-      data-state="ready"
+      data-state={heroLoading || productLoading ? 'loading' : 'ready'}
       className="home-page min-h-screen selection:bg-rose-200 selection:text-black"
     >
-      <Navbar scrolled={scrolled} />
+      <Navbar 
+        scrolled={scrolled} 
+        siteSettings={siteLoading ? DEFAULT_SITE_SETTINGS : siteSettings}
+        loading={siteLoading}
+      />
       
       <main data-section="main-content" className="home-page__main">
         {/* Fullscreen Video Hero */}
-        <Hero />
+        {heroLoading ? (
+          <HeroSkeleton />
+        ) : (
+          <Hero 
+            content={heroContent}
+            loading={heroLoading}
+          />
+        )}
         
         {/* The 3D Interactive Pre-Order Centerpiece */}
         <section 
@@ -32,14 +52,32 @@ const App: React.FC = () => {
           data-section="pre-order"
           className="home-page__pre-order-section relative z-10 bg-[#0c0c0c]"
         >
-          <PreOrderSection />
+          {productLoading ? (
+            <PreOrderSkeleton />
+          ) : (
+            <PreOrderSection 
+              product={product}
+              loading={productLoading}
+            />
+          )}
         </section>
 
         {/* Detailed Scent Narrative */}
-        <ProductDetails />
+        {productLoading ? (
+          <ProductDetailsSkeleton />
+        ) : (
+          <ProductDetails 
+            product={product}
+            loading={productLoading}
+          />
+        )}
       </main>
 
-      <Footer />
+      <Footer 
+        siteSettings={siteLoading ? DEFAULT_SITE_SETTINGS : siteSettings}
+        loading={siteLoading}
+        shopifyDomain={SHOPIFY_DOMAIN}
+      />
       
       {/* Decorative Gradients */}
       <div 

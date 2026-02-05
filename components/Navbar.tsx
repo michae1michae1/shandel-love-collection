@@ -1,17 +1,20 @@
-
 import React from 'react';
 import { ShoppingBag, Menu } from 'lucide-react';
 import { cn } from '../lib/cn';
+import type { SiteSettings } from '../types/content';
 
 interface NavbarProps {
   scrolled: boolean;
+  siteSettings: SiteSettings;
+  loading?: boolean;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ scrolled }) => {
+export const Navbar: React.FC<NavbarProps> = ({ scrolled, siteSettings, loading = false }) => {
   return (
     <nav 
       data-component="Navbar"
       data-scrolled={scrolled || undefined}
+      data-loading={loading || undefined}
       className={cn(
         'navbar fixed top-0 left-0 w-full z-50 transition-all duration-500 px-4 md:px-12 py-4 flex items-center justify-between',
         scrolled && 'navbar--scrolled bg-[#0c0c0c]/80 backdrop-blur-md py-4 border-b border-white/5',
@@ -29,10 +32,10 @@ export const Navbar: React.FC<NavbarProps> = ({ scrolled }) => {
 
       <div data-section="brand" className="navbar__brand absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
         <span className="navbar__brand-name font-serif text-2xl md:text-3xl tracking-[0.1em] font-medium text-white uppercase">
-          Shandel Love
+          {siteSettings.brandName}
         </span>
         <span className="navbar__brand-tagline text-[10px] tracking-[0.4em] text-rose-200/80 uppercase -mt-0 font-light">
-          Collection
+          {siteSettings.brandTagline}
         </span>
       </div>
 
