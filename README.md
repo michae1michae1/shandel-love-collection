@@ -1,20 +1,55 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Shandel Love Collection
 
-# Run and deploy your AI Studio app
+A luxury fragrance pre-order experience featuring an interactive 3D product showcase and headless Shopify CMS integration.
 
-This contains everything you need to run your app locally.
+## Tech Stack
 
-View your app in AI Studio: https://ai.studio/apps/drive/1gVTGq7ZCaefL0eXWb4c5Xq_mxyG0C78T
+- **React 19** + **TypeScript** + **Vite**
+- **Three.js** / React Three Fiber — 3D bottle visualization
+- **Tailwind CSS** — Styling
+- **Shopify Storefront API** — Headless CMS & e-commerce
 
-## Run Locally
+## Shopify CMS Integration
 
-**Prerequisites:**  Node.js
+Content is managed through Shopify's metaobjects and product metafields:
 
+| Content Type | Shopify Location |
+|--------------|------------------|
+| Hero Section | Content → Metaobjects → `hero_section` |
+| Site Settings | Content → Metaobjects → `site_settings` |
+| Scent Notes | Content → Metaobjects → `scent_note` |
+| Product Features | Content → Metaobjects → `product_feature` |
+| Product Info | Products → Product metafields |
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+See [`docs/SHOPIFY_SETUP_GUIDE.md`](docs/SHOPIFY_SETUP_GUIDE.md) for detailed setup instructions.
+
+## Getting Started
+
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Configure environment**
+   
+   Create `.env.local` with your Shopify credentials:
+   ```bash
+   VITE_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+   VITE_SHOPIFY_STOREFRONT_TOKEN=your-storefront-token
+   VITE_FEATURED_PRODUCT_HANDLE=love-le-nouveau
+   ```
+
+3. **Run development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
+
+## Documentation
+
+- [Environment Variables](docs/ENV_EXAMPLE.md)
+- [Shopify Setup Guide](docs/SHOPIFY_SETUP_GUIDE.md)
