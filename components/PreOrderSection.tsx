@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 import { Star, Leaf, Truck, Sparkles } from 'lucide-react';
 import { BottleScene } from './three/BottleScene';
+import { ProductImageDisplay } from './ProductImageDisplay';
 import { cn } from '../lib/cn';
 import type { ProductData, ProductFeature } from '../types/content';
 
@@ -14,16 +15,18 @@ interface PreOrderSectionProps {
 
 export const PreOrderSection: React.FC<PreOrderSectionProps> = ({ product, features, loading = false }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const useFeaturedImage = Boolean(product.featuredProductImage);
 
   return (
     <div 
       data-component="PreOrderSection"
       data-hovered={isHovered || undefined}
       data-loading={loading || undefined}
+      data-display-mode={useFeaturedImage ? 'image' : '3d-model'}
       className="pre-order-section py-12 lg:py-24 px-4 md:px-12 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-8 lg:gap-24 min-h-[90svh]"
     >
       <div 
-        data-section="3d-canvas"
+        data-section={useFeaturedImage ? 'product-image' : '3d-canvas'}
         className={cn(
           'pre-order-section__canvas relative w-[85%] md:w-[70%] lg:w-1/2 h-[350px] lg:h-[700px] order-1 lg:order-1 outline-none focus:outline-none',
           isHovered && 'pre-order-section__canvas--hovered'
@@ -32,27 +35,34 @@ export const PreOrderSection: React.FC<PreOrderSectionProps> = ({ product, featu
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="pre-order-section__canvas-inner absolute inset-0 z-10">
-          <Canvas shadows camera={{ position: [0, 0, 10], fov: 40 }}>
-            <Suspense fallback={null}>
-              <ambientLight intensity={0.5} />
-              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-              <pointLight position={[-10, -10, -10]} intensity={0.5} />
-              <pointLight position={[0, 0, 5]} intensity={0.5} color="#FFD700" />
-              
-              <BottleScene isHovered={isHovered} />
-              
-              <ContactShadows position={[0, -3.5, 0]} opacity={0.4} scale={10} blur={2.5} far={4} />
-              <Environment preset="city" />
-              <OrbitControls 
-                enableZoom={false} 
-                enablePan={false}
-                minPolarAngle={Math.PI / 3}
-                maxPolarAngle={Math.PI / 1.5}
-              />
-            </Suspense>
-          </Canvas>
-        </div>
+        {useFeaturedImage ? (
+          <ProductImageDisplay
+            image={product.featuredProductImage!}
+            isHovered={isHovered}
+          />
+        ) : (
+          <div className="pre-order-section__canvas-inner absolute inset-0 z-10">
+            <Canvas shadows camera={{ position: [0, 0, 10], fov: 40 }}>
+              <Suspense fallback={null}>
+                <ambientLight intensity={0.5} />
+                <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+                <pointLight position={[-10, -10, -10]} intensity={0.5} />
+                <pointLight position={[0, 0, 5]} intensity={0.5} color="#FFD700" />
+                
+                <BottleScene isHovered={isHovered} />
+                
+                <ContactShadows position={[0, -3.5, 0]} opacity={0.4} scale={10} blur={2.5} far={4} />
+                <Environment preset="city" />
+                <OrbitControls 
+                  enableZoom={false} 
+                  enablePan={false}
+                  minPolarAngle={Math.PI / 3}
+                  maxPolarAngle={Math.PI / 1.5}
+                />
+              </Suspense>
+            </Canvas>
+          </div>
+        )}
       </div>
 
       <div data-section="product-info" className="pre-order-section__info w-full lg:w-1/2 order-2 lg:order-2 space-y-6 lg:space-y-8">

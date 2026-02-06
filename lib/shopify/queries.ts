@@ -16,7 +16,8 @@ const PRODUCT_METAFIELDS_FRAGMENT = `
     { namespace: "custom", key: "image_caption" },
     { namespace: "custom", key: "image_quote" },
     { namespace: "custom", key: "scent_notes" },
-    { namespace: "custom", key: "features" }
+    { namespace: "custom", key: "features" },
+    { namespace: "custom", key: "featured_product_image" }
   ]) {
     key
     value

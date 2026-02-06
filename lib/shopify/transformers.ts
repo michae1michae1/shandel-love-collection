@@ -134,6 +134,9 @@ export function transformProduct(product: ShopifyProduct): ProductData {
     ?.map((ref) => transformProductFeature(ref as unknown as ShopifyMetaobject))
     .sort((a, b) => a.order - b.order) || [];
 
+  // Get featured product image (replaces 3D model when present)
+  const featuredProductImage = getMetafieldImage(metafields, 'featured_product_image');
+
   // Get lifestyle image
   const lifestyleImage = getMetafieldImage(metafields, 'lifestyle_image');
 
@@ -166,6 +169,7 @@ export function transformProduct(product: ShopifyProduct): ProductData {
     sectionEyebrow: getMetafieldValue(metafields, 'section_eyebrow'),
     sectionTitle: getMetafieldValue(metafields, 'section_title'),
     sectionDescription: getMetafieldValue(metafields, 'section_description'),
+    featuredProductImage,
     lifestyleImage,
     imageCaption: getMetafieldValue(metafields, 'image_caption'),
     imageQuote: getMetafieldValue(metafields, 'image_quote'),

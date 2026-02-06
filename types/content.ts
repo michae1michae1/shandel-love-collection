@@ -82,6 +82,7 @@ export interface ProductData {
   sectionEyebrow: string | null;
   sectionTitle: string | null;
   sectionDescription: string | null;
+  featuredProductImage: ProductImage | null;
   lifestyleImage: ProductImage | null;
   imageCaption: string | null;
   imageQuote: string | null;
@@ -152,6 +153,7 @@ export const DEFAULT_PRODUCT_DATA: ProductData = {
   sectionEyebrow: 'The Experience',
   sectionTitle: 'A Trail of LOVE.',
   sectionDescription: 'Love "Le Nouveau" is a scent crafted to uplift the spirit, calm the heart, and leave a trail of LOVE wherever you go. Organic & Natural ingredients only.',
+  featuredProductImage: null,
   lifestyleImage: {
     url: 'https://images.unsplash.com/photo-1615484477778-ca3b77940c25?auto=format&fit=crop&q=80&w=1000',
     altText: 'Fragrance application',
