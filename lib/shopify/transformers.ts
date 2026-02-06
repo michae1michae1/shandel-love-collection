@@ -14,6 +14,7 @@ import type {
   ProductFeature,
   ProductData,
   ProductImage,
+  PromoData,
 } from '../../types/content';
 
 // Helper to get field value from metaobject
@@ -118,6 +119,28 @@ export function transformProductFeature(metaobject: ShopifyMetaobject): ProductF
   };
 }
 
+// Extract promo data from metafields (null = promo disabled)
+function extractPromoData(metafields: (ShopifyMetafield | null)[]): PromoData | null {
+  const promoImage = getMetafieldImage(metafields, 'promo_image');
+  const promoHeadline = getMetafieldValue(metafields, 'promo_headline');
+  const promoBundleVariantId = getMetafieldValue(metafields, 'promo_bundle_variant_id');
+
+  // Promo requires at minimum: image, headline, and bundle variant ID
+  if (!promoImage || !promoHeadline || !promoBundleVariantId) {
+    return null;
+  }
+
+  return {
+    image: promoImage,
+    headline: promoHeadline,
+    description: getMetafieldValue(metafields, 'promo_description'),
+    badgeText: getMetafieldValue(metafields, 'promo_badge_text'),
+    ctaText: getMetafieldValue(metafields, 'promo_cta_text') || 'Claim the Duo Set',
+    bundleVariantId: promoBundleVariantId,
+    bundlePrice: getMetafieldValue(metafields, 'promo_bundle_price'),
+  };
+}
+
 // Transform Shopify product to ProductData
 export function transformProduct(product: ShopifyProduct): ProductData {
   const metafields = product.metafields || [];
@@ -175,5 +198,6 @@ export function transformProduct(product: ShopifyProduct): ProductData {
     imageQuote: getMetafieldValue(metafields, 'image_quote'),
     scentNotes,
     features,
+    promo: extractPromoData(metafields),
   };
 }

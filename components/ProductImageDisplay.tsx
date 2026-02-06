@@ -22,14 +22,19 @@ export const ProductImageDisplay: React.FC<ProductImageDisplayProps> = ({ image,
       <motion.div
         className="product-image-display__frame relative z-10"
         animate={{
-          y: isHovered ? -8 : [0, -12, 0],
+          y: isHovered ? -8 : -12,
           scale: isHovered ? 1.04 : 1,
           rotateY: isHovered ? 3 : 0,
         }}
+        initial={{ y: 0 }}
         transition={
           isHovered
             ? { type: 'spring', stiffness: 200, damping: 20 }
-            : { duration: 4, repeat: Infinity, ease: 'easeInOut' }
+            : { 
+                y: { duration: 2.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
+                scale: { duration: 0.4 },
+                rotateY: { duration: 0.4 },
+              }
         }
       >
         <ProductImageFrame image={image} isHovered={isHovered} />

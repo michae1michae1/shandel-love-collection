@@ -51,6 +51,16 @@ export interface ProductPrice {
   currencyCode: string;
 }
 
+export interface PromoData {
+  image: ProductImage;
+  headline: string;
+  description: string | null;
+  badgeText: string | null;
+  ctaText: string;
+  bundleVariantId: string;
+  bundlePrice: string | null;
+}
+
 export interface ProductData {
   id: string;
   handle: string;
@@ -88,6 +98,7 @@ export interface ProductData {
   imageQuote: string | null;
   scentNotes: ScentNote[];
   features: ProductFeature[];
+  promo: PromoData | null;
 }
 
 // Default/Fallback content when Shopify is not configured
@@ -164,4 +175,5 @@ export const DEFAULT_PRODUCT_DATA: ProductData = {
   imageQuote: '"Love transforms everything."',
   scentNotes: DEFAULT_SCENT_NOTES,
   features: DEFAULT_PRODUCT_FEATURES,
+  promo: null,
 };

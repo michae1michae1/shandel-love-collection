@@ -4,6 +4,7 @@ export { Footer } from './Footer';
 export { ProductDetails } from './ProductDetails';
 export { PreOrderSection } from './PreOrderSection';
 export { ProductImageDisplay } from './ProductImageDisplay';
+export { PromoBanner } from './PromoBanner';
 export { ComingSoon } from './ComingSoon';
 
 // Re-export three components

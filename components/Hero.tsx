@@ -5,9 +5,10 @@ import type { HeroContent } from '../types/content';
 interface HeroProps {
   content: HeroContent;
   loading?: boolean;
+  onSecondaryClick?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ content, loading = false }) => {
+export const Hero: React.FC<HeroProps> = ({ content, loading = false, onSecondaryClick }) => {
   return (
     <section 
       data-component="Hero"
@@ -63,7 +64,10 @@ export const Hero: React.FC<HeroProps> = ({ content, loading = false }) => {
             {content.primaryCtaText}
           </a>
           {content.secondaryCtaText && (
-            <button className="hero__cta hero__cta--secondary text-white/60 hover:text-white transition-colors uppercase tracking-[0.2em] text-[10px] font-bold">
+            <button 
+              className="hero__cta hero__cta--secondary text-white/60 hover:text-white transition-colors uppercase tracking-[0.2em] text-[10px] font-bold"
+              onClick={onSecondaryClick}
+            >
               {content.secondaryCtaText}
             </button>
           )}

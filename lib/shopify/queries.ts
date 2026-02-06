@@ -17,7 +17,14 @@ const PRODUCT_METAFIELDS_FRAGMENT = `
     { namespace: "custom", key: "image_quote" },
     { namespace: "custom", key: "scent_notes" },
     { namespace: "custom", key: "features" },
-    { namespace: "custom", key: "featured_product_image" }
+    { namespace: "custom", key: "featured_product_image" },
+    { namespace: "custom", key: "promo_image" },
+    { namespace: "custom", key: "promo_headline" },
+    { namespace: "custom", key: "promo_description" },
+    { namespace: "custom", key: "promo_badge_text" },
+    { namespace: "custom", key: "promo_cta_text" },
+    { namespace: "custom", key: "promo_bundle_variant_id" },
+    { namespace: "custom", key: "promo_bundle_price" }
   ]) {
     key
     value

@@ -56,6 +56,9 @@ const App: React.FC = () => {
           <Hero 
             content={heroContent}
             loading={heroLoading}
+            onSecondaryClick={() => {
+              document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' });
+            }}
           />
         )}
         

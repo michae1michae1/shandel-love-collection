@@ -4,6 +4,7 @@ import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 import { Star, Leaf, Truck, Sparkles } from 'lucide-react';
 import { BottleScene } from './three/BottleScene';
 import { ProductImageDisplay } from './ProductImageDisplay';
+import { PromoBanner } from './PromoBanner';
 import { cn } from '../lib/cn';
 import type { ProductData, ProductFeature } from '../types/content';
 
@@ -29,6 +30,7 @@ export const PreOrderSection: React.FC<PreOrderSectionProps> = ({ product, featu
         data-section={useFeaturedImage ? 'product-image' : '3d-canvas'}
         className={cn(
           'pre-order-section__canvas relative w-[85%] md:w-[70%] lg:w-1/2 h-[350px] lg:h-[700px] order-1 lg:order-1 outline-none focus:outline-none',
+          useFeaturedImage && 'mb-6 lg:mb-0',
           isHovered && 'pre-order-section__canvas--hovered'
         )}
         style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -69,6 +71,7 @@ export const PreOrderSection: React.FC<PreOrderSectionProps> = ({ product, featu
         <PreOrderHeader product={product} />
         <PreOrderDescription product={product} />
         <PreOrderFeatures features={features && features.length > 0 ? features : product.features} />
+        {product.promo && <PromoBanner promo={product.promo} />}
         <PreOrderActions product={product} />
       </div>
     </div>
