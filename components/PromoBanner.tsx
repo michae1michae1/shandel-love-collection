@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Gift } from 'lucide-react';
 import { cn } from '../lib/cn';
+import { useCart } from '../hooks/useCart';
+import { getVariantAvailability } from '../lib/shopify/cart';
 import type { PromoData } from '../types/content';
 
 interface PromoBannerProps {
@@ -79,18 +81,68 @@ interface PromoDetailsProps {
 }
 
 const PromoDetails: React.FC<PromoDetailsProps> = ({ promo }) => {
-  const handleBundleCta = () => {
-    const shopifyDomain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
-    if (shopifyDomain && promo.bundleVariantId) {
-      const numericId = promo.bundleVariantId.includes('/')
-        ? promo.bundleVariantId.split('/').pop()
-        : promo.bundleVariantId;
-      window.open(
-        `https://${shopifyDomain}/cart/add?id=${numericId}&quantity=1`,
-        '_blank'
-      );
+  const { addItem, openCart, isAdding } = useCart();
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(true);
+
+  // Fetch bundle variant availability on mount
+  useEffect(() => {
+    // DEBUG: Log the variant ID from the metafield
+    console.log('[PromoBanner] Bundle variant ID from metafield:', promo.bundleVariantId);
+    
+    if (!promo.bundleVariantId) {
+      console.warn('[PromoBanner] No bundle variant ID configured');
+      setIsAvailable(false);
+      setIsCheckingAvailability(false);
+      return;
     }
+
+    let cancelled = false;
+
+    async function checkAvailability() {
+      try {
+        const availability = await getVariantAvailability(promo.bundleVariantId);
+        // DEBUG: Log the full availability response
+        console.log('[PromoBanner] Availability check result:', {
+          inputId: promo.bundleVariantId,
+          response: availability,
+        });
+        
+        if (!cancelled) {
+          setIsAvailable(availability?.availableForSale ?? false);
+        }
+      } catch (error) {
+        console.error('[PromoBanner] Failed to check bundle variant availability:', error);
+        if (!cancelled) {
+          // Default to available if check fails (let the cart API handle errors)
+          setIsAvailable(true);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsCheckingAvailability(false);
+        }
+      }
+    }
+
+    checkAvailability();
+    return () => { cancelled = true; };
+  }, [promo.bundleVariantId]);
+
+  const handleBundleCta = async () => {
+    if (!promo.bundleVariantId || !isAvailable) return;
+    
+    await addItem(promo.bundleVariantId);
+    openCart();
   };
+
+  const getButtonLabel = () => {
+    if (isCheckingAvailability) return 'Loading...';
+    if (!isAvailable) return 'Out of Stock';
+    if (isAdding) return 'Adding...';
+    return promo.ctaText;
+  };
+
+  const canClick = isAvailable && !isAdding && !isCheckingAvailability && !!promo.bundleVariantId;
 
   return (
     <div className="promo-banner__details flex-1 text-center sm:text-left space-y-2">
@@ -114,13 +166,18 @@ const PromoDetails: React.FC<PromoDetailsProps> = ({ promo }) => {
         className={cn(
           'promo-banner__cta',
           'inline-flex items-center gap-2 px-5 py-2 mt-1',
-          'border border-white/20 text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]',
-          'rounded-full transition-all hover:bg-white/10 hover:border-rose-300/30 active:scale-95'
+          'text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]',
+          'rounded-full transition-all',
+          isAvailable && !isCheckingAvailability
+            ? 'border border-white/20 text-white hover:bg-white/10 hover:border-rose-300/30 active:scale-95'
+            : 'border border-white/10 text-white/30 cursor-not-allowed',
+          'disabled:opacity-60 disabled:cursor-not-allowed'
         )}
         onClick={handleBundleCta}
+        disabled={!canClick}
       >
-        {promo.ctaText}
-        {promo.bundlePrice && (
+        {getButtonLabel()}
+        {isAvailable && !isAdding && !isCheckingAvailability && promo.bundlePrice && (
           <span className="promo-banner__cta-price text-rose-200/70 font-light">
             — ${parseFloat(promo.bundlePrice).toFixed(0)}
           </span>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Menu, X } from 'lucide-react';
 import { cn } from '../lib/cn';
+import { useCart } from '../hooks/useCart';
 import type { SiteSettings } from '../types/content';
 
 interface NavbarProps {
@@ -19,6 +20,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onExperienceClick,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { cart, openCart } = useCart();
+  const cartCount = cart?.totalQuantity ?? 0;
 
   // Close mobile menu on escape key
   useEffect(() => {
@@ -106,11 +109,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             Pre-Order
           </a>
-          <button className="navbar__cart text-white hover:text-rose-200 transition-colors relative">
+          <button 
+            className="navbar__cart text-white hover:text-rose-200 transition-colors relative"
+            onClick={openCart}
+            aria-label="Open cart"
+          >
             <ShoppingBag size={20} strokeWidth={1.5} />
-            <span className="navbar__cart-count absolute -top-1 -right-1 bg-rose-400 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-              0
-            </span>
+            {cartCount > 0 && (
+              <span className="navbar__cart-count absolute -top-1 -right-1 bg-rose-400 text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold text-white">
+                {cartCount > 99 ? '99+' : cartCount}
+              </span>
+            )}
           </button>
           <button 
             className="navbar__menu-toggle text-white md:hidden"

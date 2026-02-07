@@ -4,3 +4,4 @@ export { useHeroContent } from './useHeroContent';
 export { useSiteSettings } from './useSiteSettings';
 export { useScentNotes } from './useScentNotes';
 export { useProductFeatures } from './useProductFeatures';
+export { useCart } from './useCart';

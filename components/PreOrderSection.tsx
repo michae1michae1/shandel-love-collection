@@ -6,6 +6,7 @@ import { BottleScene } from './three/BottleScene';
 import { ProductImageDisplay } from './ProductImageDisplay';
 import { PromoBanner } from './PromoBanner';
 import { cn } from '../lib/cn';
+import { useCart } from '../hooks/useCart';
 import type { ProductData, ProductFeature } from '../types/content';
 
 interface PreOrderSectionProps {
@@ -184,30 +185,46 @@ interface PreOrderActionsProps {
 
 const PreOrderActions: React.FC<PreOrderActionsProps> = ({ product }) => {
   const price = product.priceRange.minVariantPrice;
-  const variantId = product.variants[0]?.id;
+  const variant = product.variants[0];
+  const variantId = variant?.id;
+  const isAvailable = variant?.availableForSale ?? false;
+  const { addItem, openCart, isAdding } = useCart();
 
-  const handlePreOrder = () => {
-    // Shopify cart URL - replace with actual Shopify checkout integration
-    const shopifyDomain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
-    if (shopifyDomain && variantId) {
-      // Extract numeric ID from Shopify GID
-      const numericId = variantId.split('/').pop();
-      window.open(`https://${shopifyDomain}/cart/add?id=${numericId}&quantity=1`, '_blank');
-    } else {
-      console.warn('Shopify not configured or no variant available');
-    }
+  const handlePreOrder = async () => {
+    if (!variantId || !isAvailable) return;
+    
+    await addItem(variantId);
+    openCart();
+  };
+
+  const getButtonLabel = () => {
+    if (!isAvailable) return 'Out of Stock';
+    if (isAdding) return 'Adding...';
+    return `Pre-Order Now — $${parseFloat(price.amount).toFixed(0)}`;
   };
 
   return (
     <div className="pre-order-section__actions space-y-4">
       <button 
-        className="pre-order-section__cta w-full py-4 lg:py-5 bg-white text-black font-bold uppercase tracking-[0.2em] text-xs hover:bg-rose-100 transition-all rounded-full shadow-2xl shadow-white/5 active:scale-95"
+        className={cn(
+          'pre-order-section__cta w-full py-4 lg:py-5 font-bold uppercase tracking-[0.2em] text-xs',
+          'transition-all rounded-full shadow-2xl',
+          isAvailable
+            ? 'bg-white text-black hover:bg-rose-100 shadow-white/5 active:scale-95'
+            : 'bg-white/10 text-white/40 border border-white/10 shadow-none cursor-not-allowed',
+          'disabled:opacity-70 disabled:cursor-not-allowed'
+        )}
         onClick={handlePreOrder}
+        disabled={isAdding || !variantId || !isAvailable}
       >
-        Pre-Order Now — ${parseFloat(price.amount).toFixed(0)}
+        {getButtonLabel()}
       </button>
       <p className="pre-order-section__secure-checkout text-center text-[9px] lg:text-[10px] text-white/30 uppercase tracking-[0.2em]">
-        Secure checkout powered by <span className="pre-order-section__secure-checkout-highlight text-white/60 font-bold">Shopify</span>
+        {isAvailable ? (
+          <>Secure checkout powered by <span className="pre-order-section__secure-checkout-highlight text-white/60 font-bold">Shopify</span></>
+        ) : (
+          'Check back soon for availability'
+        )}
       </p>
     </div>
   );
